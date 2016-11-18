@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 3c4dbe26d97e75e469fa8edbeec80846
-timeCreated: 1479438658
+guid: fc60b2364bcd7f14ba11f9e3e4e8478c
+timeCreated: 1479463703
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Curve.1082
+    4300000: Curve
   materials:
     importMaterials: 1
     materialName: 0

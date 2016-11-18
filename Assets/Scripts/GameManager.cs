@@ -13,14 +13,16 @@ public class GameManager : MonoBehaviour
     */
     public GameObject leftHand;
     public GameObject rightHand;
+    public GameObject leftHandText;
+    public GameObject rightHandText;
     public Material handReady;
     public Material handNotReady;
+    public float tableHeight;
+    public float radius;
     int CurrentGameState = 0;
-    int PlayersConnected = 0;
     bool leftReady = false;
     bool rightReady = false;
-    bool hasSentPrep = false;
-    string[] ConnectedPlayers; 
+    List<string> ConnectedPlayers = new List<string>(); 
 
     private SocketIOComponent socket;
 
@@ -33,6 +35,7 @@ public class GameManager : MonoBehaviour
         socket.On("close", SocketClose);
         socket.On("lobby_update", LobbyUpdate);
         socket.On("vr_attempt", VRAttempt);
+        socket.On("game_update", GameUpdate);
     }
 
     // Update is called once per frame
@@ -77,16 +80,39 @@ public class GameManager : MonoBehaviour
                 }
             }
             //Check if game is ready to start!
-            if(rightReady && leftReady && PlayersConnected > 0)
+            if(rightReady && leftReady && ConnectedPlayers.Count > 0)
             {
                 //Start game here
-                CurrentGameState = 1;
+                // CurrentGameState = 1;
                 //Tell server to start the game!
-                socket.Emit("");
-
+                //socket.Emit("");
+                Debug.Log("Start game");
+                CurrentGameState = 1;
             }
         }
-        
+        if(CurrentGameState == 1)
+        {
+            RootBlockers b = new RootBlockers();
+            Blocker rightB = new Blocker();
+            rightB.coord = new List<float>();
+            rightB.coord.Add(leftHand.transform.position.x);
+            rightB.coord.Add(leftHand.transform.position.y);
+            rightB.coord.Add(leftHand.transform.position.z - tableHeight);
+            rightB.radius = radius;
+            b.blockers = new List<Blocker>();
+            b.blockers.Add(rightB);
+            Blocker leftB = new Blocker();
+            leftB.coord = new List<float>();
+            leftB.coord.Add(rightHand.transform.position.x);
+            leftB.coord.Add(rightHand.transform.position.y);
+            leftB.coord.Add(rightHand.transform.position.z - tableHeight);
+            leftB.radius = radius;
+            b.blockers.Add(leftB);
+            string jsonToSend = JsonConvert.SerializeObject(b);
+            JSONObject send = new JSONObject(jsonToSend);
+            socket.Emit("vr_blocker_update", send);
+            Debug.Log(send.ToString());
+        }
     }
 
 
@@ -102,9 +128,19 @@ public class GameManager : MonoBehaviour
     public void LobbyUpdate(SocketIOEvent e)
     {
         Debug.Log("[SocketIO] Lobby Update: " + e.name + " " + e.data);
-
         LobbyObject r = JsonConvert.DeserializeObject<LobbyObject>(e.data.ToString());
-        ConnectedPlayers = r.lobby.ToArray();
+        ConnectedPlayers = r.lobby;
+        if(ConnectedPlayers.Count > 0)
+        {
+            leftHandText.GetComponent<Renderer>().enabled = true;
+            leftHandText.GetComponent<TextMesh>().text = "Grab both cubes to start";
+            rightHandText.GetComponent<TextMesh>().text = "" + ConnectedPlayers.Count + " Player(s) connected";
+        }
+        else
+        {
+            leftHandText.GetComponent<Renderer>().enabled = false;
+            rightHandText.GetComponent<TextMesh>().text = "Waiting for Players";
+        }
     }
 
     public void VRAttempt(SocketIOEvent e)
@@ -112,10 +148,25 @@ public class GameManager : MonoBehaviour
         socket.Emit("vr_connect");
     }
 
+    public void GameUpdate(SocketIOEvent e)
+    {
+        Debug.Log("[SocketIO] Close received: " + e.name + " " + e.data);
+    }
 
     public class LobbyObject
     {
         public List<string> lobby { get; set; }
     }
-    
+
+    public class Blocker
+    {
+        public float radius { get; set; }
+        public List<float> coord { get; set; }
+    }
+
+    public class RootBlockers
+    {
+        public List<Blocker> blockers { get; set; }
+    }
+
 }
