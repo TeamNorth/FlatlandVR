@@ -248,52 +248,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
---- !u!1001 &45323037
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-      propertyPath: url
-      value: ws://192.168.0.197:3000/socket.io/?EIO=4&transport=websocket
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &248231182
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,7 +375,6 @@ GameObject:
   - 4: {fileID: 432118802}
   - 23: {fileID: 432118801}
   - 102: {fileID: 432118800}
-  - 114: {fileID: 432118803}
   m_Layer: 0
   m_Name: Subtitle
   m_TagString: Untagged
@@ -492,21 +445,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
---- !u!114 &432118803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 432118799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a933938dc2b274342928b119d08e673b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftHand: {fileID: 0}
-  rightHand: {fileID: 0}
-  handReady: {fileID: 0}
-  handNotReady: {fileID: 0}
 --- !u!1001 &532945551
 Prefab:
   m_ObjectHideFlags: 0
@@ -676,6 +614,52 @@ Skybox:
   m_GameObject: {fileID: 895393120}
   m_Enabled: 1
   m_CustomSkybox: {fileID: 0}
+--- !u!1001 &930236307
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+      propertyPath: url
+      value: ws://192.168.0.197:3000/socket.io/?EIO=4&transport=websocket
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 010d39cbd03ee4c99a746c1f8ecdc0d8, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1106479412
 GameObject:
   m_ObjectHideFlags: 0

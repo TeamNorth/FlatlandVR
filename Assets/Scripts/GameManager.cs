@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SocketIO;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +20,7 @@ public class GameManager : MonoBehaviour
     bool leftReady = false;
     bool rightReady = false;
     bool hasSentPrep = false;
+    string[] ConnectedPlayers; 
 
     private SocketIOComponent socket;
 
@@ -28,6 +32,7 @@ public class GameManager : MonoBehaviour
         socket.On("error", SocketError);
         socket.On("close", SocketClose);
         socket.On("lobby_update", LobbyUpdate);
+        socket.On("vr_attempt", VRAttempt);
     }
 
     // Update is called once per frame
@@ -76,6 +81,8 @@ public class GameManager : MonoBehaviour
             {
                 //Start game here
                 CurrentGameState = 1;
+                //Tell server to start the game!
+                socket.Emit("");
 
             }
         }
@@ -95,5 +102,20 @@ public class GameManager : MonoBehaviour
     public void LobbyUpdate(SocketIOEvent e)
     {
         Debug.Log("[SocketIO] Lobby Update: " + e.name + " " + e.data);
+
+        LobbyObject r = JsonConvert.DeserializeObject<LobbyObject>(e.data.ToString());
+        ConnectedPlayers = r.lobby.ToArray();
     }
+
+    public void VRAttempt(SocketIOEvent e)
+    {
+        socket.Emit("vr_connect");
+    }
+
+
+    public class LobbyObject
+    {
+        public List<string> lobby { get; set; }
+    }
+    
 }
