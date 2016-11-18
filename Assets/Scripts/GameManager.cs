@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public GameObject rightHand;
     public GameObject leftHandText;
     public GameObject rightHandText;
+    public GameObject player;
     public Material handReady;
     public Material handNotReady;
     public float tableHeight;
@@ -22,6 +23,8 @@ public class GameManager : MonoBehaviour
     int CurrentGameState = 0;
     bool leftReady = false;
     bool rightReady = false;
+    bool sentPrep = false;
+    bool isOpen = false;
     List<string> ConnectedPlayers = new List<string>(); 
 
     private SocketIOComponent socket;
@@ -33,14 +36,23 @@ public class GameManager : MonoBehaviour
         socket = go.GetComponent<SocketIOComponent>();
         socket.On("error", SocketError);
         socket.On("close", SocketClose);
-        socket.On("lobby_update", LobbyUpdate);
-        socket.On("vr_attempt", VRAttempt);
-        socket.On("game_update", GameUpdate);
+        socket.On("open", SocketOpen);
+        //socket.On("lobby_update", LobbyUpdate);
+        //socket.On("vr_attempt", VRAttempt);
+        //socket.On("player_update", GameUpdate);
+        //socket.On("prep_resp", resp);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (!sentPrep && isOpen)
+        {
+            socket.Emit("prep");
+            sentPrep = true;
+
+        }
         if (CurrentGameState == 0)
         {
             //Check Left hand
@@ -80,7 +92,7 @@ public class GameManager : MonoBehaviour
                 }
             }
             //Check if game is ready to start!
-            if(rightReady && leftReady && ConnectedPlayers.Count > 0)
+            if(rightReady && leftReady /*&& ConnectedPlayers.Count > 0*/)
             {
                 //Start game here
                 // CurrentGameState = 1;
@@ -92,38 +104,46 @@ public class GameManager : MonoBehaviour
         }
         if(CurrentGameState == 1)
         {
+            
             RootBlockers b = new RootBlockers();
             Blocker rightB = new Blocker();
             rightB.coord = new List<float>();
             rightB.coord.Add(leftHand.transform.position.x);
-            rightB.coord.Add(leftHand.transform.position.y);
-            rightB.coord.Add(leftHand.transform.position.z - tableHeight);
+            rightB.coord.Add(leftHand.transform.position.z);
+            rightB.coord.Add(leftHand.transform.position.y - tableHeight);
             rightB.radius = radius;
             b.blockers = new List<Blocker>();
             b.blockers.Add(rightB);
             Blocker leftB = new Blocker();
             leftB.coord = new List<float>();
             leftB.coord.Add(rightHand.transform.position.x);
-            leftB.coord.Add(rightHand.transform.position.y);
-            leftB.coord.Add(rightHand.transform.position.z - tableHeight);
+            leftB.coord.Add(rightHand.transform.position.z);
+            leftB.coord.Add(rightHand.transform.position.y - tableHeight);
             leftB.radius = radius;
             b.blockers.Add(leftB);
             string jsonToSend = JsonConvert.SerializeObject(b);
             JSONObject send = new JSONObject(jsonToSend);
             socket.Emit("vr_blocker_update", send);
             Debug.Log(send.ToString());
+            
         }
     }
 
 
     public void SocketError(SocketIOEvent e)
     {
-        Debug.Log("[SocketIO] Error received: " + e.name + " " + e.data);
+        Debug.Log("[SocketIO] Error received: " + e.name + " " + e.data.ToString());
     }
 
     public void SocketClose(SocketIOEvent e)
     {
-        Debug.Log("[SocketIO] Close received: " + e.name + " " + e.data);
+        Debug.Log("[SocketIO] Close received: " + e.name + " " + e.data.ToString());
+    }
+
+    public void resp(SocketIOEvent e)
+    {
+        Debug.Log("[SocketIO] Game Start: ");
+        socket.Emit("game_start");
     }
     public void LobbyUpdate(SocketIOEvent e)
     {
@@ -150,7 +170,19 @@ public class GameManager : MonoBehaviour
 
     public void GameUpdate(SocketIOEvent e)
     {
-        Debug.Log("[SocketIO] Close received: " + e.name + " " + e.data);
+        //Get shit
+        Debug.Log("[SocketIO] Game Update received: " + e.name + " " + e.data.ToString());
+    }
+
+    public void SocketOpen(SocketIOEvent e)
+    {
+        socket.On("lobby_update", LobbyUpdate);
+        socket.On("vr_attempt", VRAttempt);
+        socket.On("player_update", GameUpdate);
+        socket.On("prep_resp", resp);
+        Debug.Log("[SocketIO] Open: " + e.name + " " + e.data);
+        //socket.Emit("test");
+        isOpen = true;
     }
 
     public class LobbyObject
